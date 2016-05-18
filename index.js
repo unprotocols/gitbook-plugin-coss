@@ -26,7 +26,7 @@ module.exports = {
       "finish:before": function() {
         var mainFiles = glob.sync("_book/**/index.html");
         mainFiles.map(function(file) {
-          fs.writeFileSync(file, fs.readFileSync(file).toString().replace(/href="([\.\/]*)(\d+)\/"/g,"href=\"./$1spec:$2\""));
+          fs.writeFileSync(file, fs.readFileSync(file).toString().replace(/href="([\.\/]*)(\d+)\/"/g,"href=\"./$1spec:$2/\""));
         });
         var files = glob.sync("_book/spec:*/**/index.html");
         files.map(function(file) {
