@@ -16,8 +16,14 @@ module.exports = {
           // save a spec: copy
           var n = page.title.split('/')[0]
           var name = page.title.split('/')[1]
-          fs.mkdirSync("_book/spec:" + n)
-          fs.mkdirSync("_book/spec:" + n + "/" + name)
+          try {
+            fs.mkdirSync("_book/spec:" + n);
+          } catch (e) {
+          }
+          try {
+            fs.mkdirSync("_book/spec:" + n + "/" + name);
+          } catch (e) {
+          }
           fs.writeFileSync("_book/spec:" + n + "/index.html", page.content)
           fs.writeFileSync("_book/spec:" + n + "/" + name + "/index.html", page.content)
         }
