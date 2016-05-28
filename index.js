@@ -26,6 +26,14 @@ module.exports = {
           }
           fs.writeFileSync("_book/spec:" + n + "/index.html", page.content)
           fs.writeFileSync("_book/spec:" + n + "/" + name + "/index.html", page.content)
+          var files = glob.sync(n + "/**");
+          files.map(function(file) {
+            if (file.match(/README\.md$/) == null && fs.lstatSync(file).isFile()) {
+              var content = fs.readFileSync(file);
+              fs.writeFileSync("_book/spec:" + file, content);
+              fs.writeFileSync("_book/spec:" + file.replace(new RegExp("^" + n), n + "/" + name), content);
+            }
+          });
         }
         return page;
       },
