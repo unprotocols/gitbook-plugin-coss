@@ -7,10 +7,29 @@ module.exports = {
     // Map of hooks
     hooks: {
       "page:before": function(page) {
-        if (page.title.match(/^\d+\/.+/) !== null) {
-          shortnames[page.title.split("/")[0]] = page.title;
+        var title = page.shortname || page.title;
+
+        var name = page.name ? "\n ## " + page.name : "";
+        var insert = "";
+
+        if (!page.noinsert && page.status) {
+          insert += "![" + page.status + "](http://rfc.unprotocols.org/spec:2/COSS/" + page.status + ".svg)\n"
+        }
+
+        if (!page.noinsert && page.domain) {
+          insert += "* Name: [" + page.domain + "/spec:" + page.shortname + "](http://" + page.domain + "/spec:" + page.shortname + ")\n";
+          insert += "* Status: " + page.status + "\n";
+          insert += "* Editor: " + page.editor + "\n";
+          if (page.contributors) {
+            insert += "* Contributors: " + (page.contributors || []).join(', ') + "\n";
+          }
+          insert += "\n";
+        }
+
+        if (title.match(/^\d+\/.+/) !== null) {
+          shortnames[title.split("/")[0]] = title;
           // Update title
-          page.content = "# " + page.title + "\n" + page.content;
+          page.content = "# " + title + name + "\n" + insert + page.content;
         }
         return page;
       },
