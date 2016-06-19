@@ -9,5 +9,6 @@ in the following forms:
 * /spec:NN
 * /spec:NN/NAME
 * /NN (shortcut form)
+* /NAME
 
 It will also use YAML front matter to populate specification metainformation, unless `noinsert` is specified in the front matter.
