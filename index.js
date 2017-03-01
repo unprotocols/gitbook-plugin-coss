@@ -92,6 +92,7 @@ module.exports = {
           var content = fs.readFileSync("_book/" + file.match(/spec:\d+/)[0].split(':')[1] + "/index.html").toString();
           if (file.match(/spec:\d+\/.+\/index\.html/) != null) {
             content = content.replace(/\.\.\/gitbook/g,"../../gitbook")
+            content = content.replace(/\.\.\/styles/g,"../../styles")
             content = content.replace(/a href="\.\/\.\.\//g,"a href=\"../../")
           }
           fs.writeFileSync(file, content);
