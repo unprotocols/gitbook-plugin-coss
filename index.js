@@ -64,9 +64,9 @@ module.exports = {
             fs.mkdirSync("_book/spec:" + n + "/" + name);
           } catch (e) {
           }
-          var redirect = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=../spec:' + n + '/' + name + '"><title></title></head></html>'
+          var redirect = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=../spec:' + n + '/' + name + '/"><title></title></head></html>'
           fs.writeFileSync("_book/spec:" + n + "/index.html", redirect)
-          var redirectName = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=../spec:' + pointers[name] + '/' + name + '"><title></title></head></html>'
+          var redirectName = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=../spec:' + pointers[name] + '/' + name + '/"><title></title></head></html>'
           fs.writeFileSync("_book/" + name + "/index.html", redirectName)
           fs.writeFileSync("_book/spec:" + n + "/" + name + "/index.html", page.content)
           var files = glob.sync(n + "/**");
@@ -88,7 +88,7 @@ module.exports = {
         mainFiles.map(function(file) {
           fs.writeFileSync(file, fs.readFileSync(file).toString().replace(/href="([\.\/]*)(\d+)\/"/g,
              function(m, p1, p2) {
-               return "href=\"./" + p1 + "spec:" + shortnames[p2] + "\""
+               return "href=\"./" + p1 + "spec:" + shortnames[p2] + "/\""
              }));
         });
         var files = glob.sync("_book/spec:*/?**/*.html");
@@ -97,10 +97,10 @@ module.exports = {
           var content = fs.readFileSync("_book/" + file.match(/spec:\d+/)[0].split(':')[1] + "/index.html").toString();
           if (file.match(/spec:\d+\/.+\/index\.html/) != null) {
             // this replaces all gitbook resource links: "../gitbook" --> "../../gitbook"
-            content = content.replace(/\.\.\/gitbook/g,"../../gitbook")
-            content = content.replace(/\.\.\/styles/g,"../../styles")
+            content = content.replace(/\.\.\/gitbook/g,"./../../gitbook")
+            content = content.replace(/\.\.\/styles/g,"./../../styles")
             // this replaces "one-level-up" links: "./../"  -->  "../../" AND "../"  -->  "../../"
-            content = content.replace(/a href="(\.\/)?\.\.\//g,"a href=\"../../")
+            content = content.replace(/a href="(\.\/)?\.\.\//g,"a href=\"./../../")
           }
           fs.writeFileSync(file, content);
         });
