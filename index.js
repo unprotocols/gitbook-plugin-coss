@@ -91,17 +91,16 @@ module.exports = {
                return "href=\"./" + p1 + "spec:" + shortnames[p2] + "\""
              }));
         });
-        var files = glob.sync("_book/spec:*/?**/index.html");
+        var files = glob.sync("_book/spec:*/?**/*.html");
         // this function corrects relative paths, as now every content is one level deeper
         files.map(function(file) {
           var content = fs.readFileSync("_book/" + file.match(/spec:\d+/)[0].split(':')[1] + "/index.html").toString();
           if (file.match(/spec:\d+\/.+\/index\.html/) != null) {
-            content = content.replace(/\.\.\/\"/g,"../../\"")
             // this replaces all gitbook resource links: "../gitbook" --> "../../gitbook"
             content = content.replace(/\.\.\/gitbook/g,"../../gitbook")
             content = content.replace(/\.\.\/styles/g,"../../styles")
             // this replaces "one-level-up" links: "./../"  -->  "../../" AND "../"  -->  "../../"
-            content = content.replace(/a href="\.\/\.\.\//g,"a href=\"../../")
+            content = content.replace(/a href="(\.\/)?\.\.\//g,"a href=\"../../")
           }
           fs.writeFileSync(file, content);
         });
