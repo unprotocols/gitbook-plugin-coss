@@ -51,7 +51,7 @@ module.exports = {
         if (page.title.match(/^\d+\/.+/) !== null) {
           // save a spec: copy
           var n = page.title.split('/')[0]
-          var name = page.title.split('/')[1]
+          var name = shortnames[n].split('/')[1]
           try {
             fs.mkdirSync("_book/" + name);
           } catch (e) {
