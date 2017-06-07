@@ -79,8 +79,12 @@ module.exports = {
         }
         return page;
       },
+      // this function fixes relative links, since the real index.html file is now located under "./spec:NN/NAME/index.html,
+      // which is "one-level-deeper" than the original one created by gitbook, where it was under "./NN/index.html"
+      // this replacement consists of two steps: first all links NN are replaced by spec:NN/NAME and then all relative paths are extended by one level
       "finish:before": function() {
         var mainFiles = glob.sync("_book/**/index.html");
+        // this replaces links to the RFCs with the new "spec:NN/NAME" link: "./../1/"  -->  "./../spec:1/NAME"
         mainFiles.map(function(file) {
           fs.writeFileSync(file, fs.readFileSync(file).toString().replace(/href="([\.\/]*)(\d+)\/"/g,
              function(m, p1, p2) {
@@ -88,12 +92,15 @@ module.exports = {
              }));
         });
         var files = glob.sync("_book/spec:*/?**/index.html");
+        // this function corrects relative paths, as now every content is one level deeper
         files.map(function(file) {
           var content = fs.readFileSync("_book/" + file.match(/spec:\d+/)[0].split(':')[1] + "/index.html").toString();
           if (file.match(/spec:\d+\/.+\/index\.html/) != null) {
             content = content.replace(/\.\.\/\"/g,"../../\"")
+            // this replaces all gitbook resource links: "../gitbook" --> "../../gitbook"
             content = content.replace(/\.\.\/gitbook/g,"../../gitbook")
             content = content.replace(/\.\.\/styles/g,"../../styles")
+            // this replaces "one-level-up" links: "./../"  -->  "../../" AND "../"  -->  "../../"
             content = content.replace(/a href="\.\/\.\.\//g,"a href=\"../../")
           }
           fs.writeFileSync(file, content);
