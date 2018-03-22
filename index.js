@@ -73,7 +73,12 @@ module.exports = {
           files.map(function(file) {
             if (file.match(/README\.md$/) == null && fs.lstatSync(file).isFile()) {
               var content = fs.readFileSync(file);
+
+              // write `_book/spec:NN/index.html` file
               fs.writeFileSync("_book/spec:" + file.replace(new RegExp("^" + n), n + "/" + name), content);
+
+              // write `_book/NN/index.html` file
+              fs.writeFileSync("_book/" + file.replace(new RegExp("^" + n), n + "/" + name), content);
             }
           });
         }
