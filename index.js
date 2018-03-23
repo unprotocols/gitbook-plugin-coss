@@ -64,16 +64,26 @@ module.exports = {
             fs.mkdirSync("_book/spec:" + n + "/" + name);
           } catch (e) {
           }
+          try {
+            fs.mkdirSync("_book/" + n);
+          } catch (e) {
+          }
+          try {
+            fs.mkdirSync("_book/" + n + "/" + name);
+          } catch (e) {
+          }
           var redirect = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=../spec:' + n + '/' + name + '/"><title></title></head></html>'
           fs.writeFileSync("_book/spec:" + n + "/index.html", redirect)
           var redirectName = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=../spec:' + pointers[name] + '/' + name + '/"><title></title></head></html>'
           fs.writeFileSync("_book/" + name + "/index.html", redirectName)
           fs.writeFileSync("_book/spec:" + n + "/" + name + "/index.html", page.content)
+          fs.writeFileSync("_book/" + n + "/index.html", redirectName)
           var files = glob.sync(n + "/**");
           files.map(function(file) {
             if (file.match(/README\.md$/) == null && fs.lstatSync(file).isFile()) {
               var content = fs.readFileSync(file);
               fs.writeFileSync("_book/spec:" + file.replace(new RegExp("^" + n), n + "/" + name), content);
+              fs.writeFileSync("_book/" + file.replace(new RegExp("^" + n), n + "/" + name), content);
             }
           });
         }
